@@ -22,11 +22,13 @@ docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/h
 # Join peer0.org1.example.com to the channel.
 docker exec -e "CORE_PEER_LOCALMSPID=Org1MSP" -e "CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/users/Admin@org1.example.com/msp" peer0.org1.example.com peer channel join -b mychannel.block
 # Install Chaincode.
-docker exec cli peer chaincode install -n cdbcc -v 1 -l node -p /opt/gopath/src/github.com/chaincode
+docker exec cli peer chaincode install -n cdbcc -v v0 -l node -p /opt/gopath/src/github.com
 #instantiate Chaincode
-docker exec cli peer chaincode instantiate -o orderer.example.com:7050 -C mychannel -n cdbcc -l node -v 1 -c '{"Args":["init","true"]}'
+docker exec cli peer chaincode instantiate -o orderer.example.com:7050 -C mychannel -n cdbcc -l node -v v0 -c '{"Args":["init","true"]}'
+#start Debugging
+CORE_CHAINCODE_ID_NAME="cdbcc:v0" node --inspect ./chaincode/app.js --peer.address grpc://localhost:7052
 
-
+#
 set +v
 Query() {
   PEER=$1

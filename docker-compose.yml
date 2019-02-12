@@ -52,8 +52,8 @@ services:
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_PEER_ID=peer0.org1.example.com
-      - CORE_LOGGING_PEER=info
-      - CORE_CHAINCODE_LOGGING_LEVEL=info
+      - CORE_LOGGING_PEER=DEBUG
+      - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
@@ -69,8 +69,8 @@ services:
       - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
       - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
-    command: peer node start
-    #command: peer node start --peer-chaincodedev=true
+    #command: peer node start
+    command: peer node start --peer-chaincodedev=true
     ports:
       - 7051:7051
       - 7052:7052
@@ -80,6 +80,7 @@ services:
         - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/msp/peer
         - ./crypto-config/peerOrganizations/org1.example.com/users:/etc/hyperledger/msp/users
         - ./config:/etc/hyperledger/configtx
+        - ./chaincode/:/opt/gopath/src/github.com/hyperledger/fabric/chaincode
     depends_on:
       - orderer.example.com
       - couchdb
@@ -116,7 +117,7 @@ services:
     command: /bin/bash
     volumes:
         - /var/run/:/host/var/run/
-        - ./chaincode/:/opt/gopath/src/github.com/chaincode
+        - ./chaincode/:/opt/gopath/src/github.com/
         - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
     networks:
         - basic
